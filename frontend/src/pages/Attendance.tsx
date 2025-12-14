@@ -26,7 +26,25 @@ export const Attendance = () => {
   const [todayAttendance, setTodayAttendance] = useState<Attendance | null>(null);
 
   useEffect(() => {
-    fetchSites();
+    const loadData = async () => {
+      try {
+        const sitesRes = await api.get('/sites');
+        setSites(sitesRes.data);
+        if (sitesRes.data.length > 0) {
+          const firstSiteId = sitesRes.data[0].id.toString();
+          setSelectedSite(firstSiteId);
+          // Fetch attendance for first site
+          const attendanceRes = await api.get(`/attendance?site_id=${firstSiteId}`);
+          setAttendance(attendanceRes.data);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+        setLoading(false);
+      }
+    };
+    
+    loadData();
     fetchTodayAttendance();
   }, []);
 
@@ -36,17 +54,6 @@ export const Attendance = () => {
     }
   }, [selectedSite]);
 
-  const fetchSites = async () => {
-    try {
-      const res = await api.get('/sites');
-      setSites(res.data);
-      if (res.data.length > 0) {
-        setSelectedSite(res.data[0].id.toString());
-      }
-    } catch (error) {
-      console.error('Failed to fetch sites:', error);
-    }
-  };
 
   const fetchAttendance = async () => {
     try {

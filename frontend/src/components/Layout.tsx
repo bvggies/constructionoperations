@@ -15,7 +15,8 @@ import {
   Bell,
   Menu,
   X,
-  LogOut
+  LogOut,
+  BarChart3
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -57,6 +58,7 @@ export const Layout = ({ children }: LayoutProps) => {
     { icon: Wrench, label: 'Equipment', path: '/equipment', roles: ['admin', 'manager', 'supervisor', 'worker'] },
     { icon: Clock, label: 'Attendance', path: '/attendance', roles: ['admin', 'manager', 'supervisor', 'worker'] },
     { icon: FileText, label: 'Documents', path: '/documents', roles: ['admin', 'manager', 'supervisor', 'worker'] },
+    { icon: BarChart3, label: 'Reports', path: '/reports', roles: ['admin', 'manager', 'supervisor', 'worker'] },
     { icon: Users, label: 'Users', path: '/users', roles: ['admin', 'manager'] },
   ].filter(item => !item.roles || item.roles.includes(user?.role || ''));
 
@@ -72,13 +74,16 @@ export const Layout = ({ children }: LayoutProps) => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-30 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-30 h-full w-64 bg-white shadow-xl border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-4 border-b">
-            <h1 className="text-xl font-bold text-primary-600">OpsTracker</h1>
+            <div className="flex items-center space-x-2">
+              <img src="/logo.svg" alt="OpsTracker" className="w-8 h-8" />
+              <h1 className="text-xl font-bold text-primary-600">OpsTracker</h1>
+            </div>
             <button
               onClick={() => setSidebarOpen(false)}
               className="lg:hidden text-gray-500 hover:text-gray-700"
@@ -96,10 +101,10 @@ export const Layout = ({ children }: LayoutProps) => {
                   key={item.path}
                   to={item.path}
                   onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg mb-2 transition-all duration-200 ${
                     isActive
-                      ? 'bg-primary-100 text-primary-700'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 font-semibold shadow-sm'
+                      : 'text-gray-700 hover:bg-gray-100 hover:shadow-sm'
                   }`}
                 >
                   <Icon size={20} />

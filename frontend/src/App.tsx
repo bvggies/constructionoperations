@@ -15,6 +15,7 @@ import { Attendance } from './pages/Attendance';
 import { Documents } from './pages/Documents';
 import { Users } from './pages/Users';
 import { Notifications } from './pages/Notifications';
+import { Reports } from './pages/Reports';
 
 // Component to redirect to role-based dashboard
 const DashboardRedirect = () => {
@@ -153,6 +154,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Notifications />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reports"
+            element={
+              <ProtectedRoute>
+                <Reports />
               </ProtectedRoute>
             }
           />

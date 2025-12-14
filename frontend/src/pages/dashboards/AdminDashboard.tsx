@@ -172,17 +172,17 @@ export const AdminDashboard = () => {
               <Link
                 key={stat.name}
                 to={stat.link}
-                className="card hover:shadow-lg transition-all hover:scale-105"
+                className="card hover:shadow-xl transition-all hover:scale-105 border-l-4 border-primary-500 bg-gradient-to-br from-white to-gray-50"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <div className={`${stat.color} p-3 rounded-lg`}>
+                  <div className={`${stat.color} p-3 rounded-lg shadow-md`}>
                     <Icon className="text-white" size={24} />
                   </div>
                   <span className={`text-sm font-semibold ${stat.change.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>
                     {stat.change}
                   </span>
                 </div>
-                <p className="text-sm text-gray-600 mb-1">{stat.name}</p>
+                <p className="text-sm text-gray-600 mb-1 font-medium">{stat.name}</p>
                 <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
               </Link>
             );

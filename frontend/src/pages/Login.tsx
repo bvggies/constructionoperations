@@ -49,10 +49,13 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 px-4">
       <div className="max-w-md w-full">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
           <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <img src="/logo.svg" alt="OpsTracker" className="w-16 h-16" />
+            </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">OpsTracker</h1>
             <p className="text-gray-600">Construction Operations Management</p>
           </div>

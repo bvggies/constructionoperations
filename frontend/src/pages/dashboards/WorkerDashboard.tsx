@@ -26,38 +26,59 @@ export const WorkerDashboard = () => {
   });
 
   useEffect(() => {
-    fetchMyTasks();
-    fetchTodayAttendance();
-    fetchMySites();
-  }, []);
+    if (!user?.id) {
+      return;
+    }
+    
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        await Promise.all([
+          fetchMyTasks(),
+          fetchTodayAttendance(),
+          fetchMySites()
+        ]);
+      } catch (error) {
+        console.error('Failed to load dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [user?.id]);
 
   const fetchMyTasks = async () => {
     try {
-      const res = await api.get(`/tasks?assigned_to=${user?.id}`);
-      setMyTasks(res.data);
+      if (!user?.id) return;
+      const res = await api.get(`/tasks?assigned_to=${user.id}`);
+      setMyTasks(res.data || []);
       
       const stats = {
-        pending: res.data.filter((t: any) => t.status === 'pending').length,
-        inProgress: res.data.filter((t: any) => t.status === 'in_progress').length,
-        completed: res.data.filter((t: any) => t.status === 'completed').length
+        pending: (res.data || []).filter((t: any) => t.status === 'pending').length,
+        inProgress: (res.data || []).filter((t: any) => t.status === 'in_progress').length,
+        completed: (res.data || []).filter((t: any) => t.status === 'completed').length
       };
       setTaskStats(stats);
     } catch (error) {
       console.error('Failed to fetch tasks:', error);
-    } finally {
-      setLoading(false);
+      setMyTasks([]);
     }
   };
 
   const fetchTodayAttendance = async () => {
     try {
+      if (!user?.id) return;
       const today = new Date().toISOString().split('T')[0];
-      const res = await api.get(`/attendance?attendance_date=${today}&user_id=${user?.id}`);
-      if (res.data.length > 0) {
+      const res = await api.get(`/attendance?attendance_date=${today}&user_id=${user.id}`);
+      if (res.data && res.data.length > 0) {
         setTodayAttendance(res.data[0]);
+      } else {
+        setTodayAttendance(null);
       }
     } catch (error) {
       console.error('Failed to fetch attendance:', error);
+      setTodayAttendance(null);
     }
   };
 
@@ -65,13 +86,14 @@ export const WorkerDashboard = () => {
     try {
       const res = await api.get('/sites');
       // Filter sites where user is assigned
-      const assignedSites = res.data.filter(() => {
+      const assignedSites = (res.data || []).filter(() => {
         // This would need a proper API endpoint to check team membership
         return true; // Simplified for now
       });
       setMySites(assignedSites.slice(0, 3));
     } catch (error) {
       console.error('Failed to fetch sites:', error);
+      setMySites([]);
     }
   };
 
@@ -103,6 +125,16 @@ export const WorkerDashboard = () => {
       alert(error.response?.data?.error || 'Failed to update task');
     }
   };
+
+  if (!user) {
+    return (
+      <Layout>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-gray-500">Loading user data...</div>
+        </div>
+      </Layout>
+    );
+  }
 
   if (loading) {
     return (
