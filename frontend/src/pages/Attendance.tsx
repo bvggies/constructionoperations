@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../lib/api';
 import { Layout } from '../components/Layout';
-import { Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface Attendance {

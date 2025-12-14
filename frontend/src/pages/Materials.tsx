@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../lib/api';
 import { Layout } from '../components/Layout';
-import { Plus, Package, AlertTriangle, ShoppingCart } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { Plus, Package, AlertTriangle } from 'lucide-react';
 
 interface MaterialInventory {
   id: number;
@@ -16,7 +15,6 @@ interface MaterialInventory {
 }
 
 export const Materials = () => {
-  const { user } = useAuth();
   const [inventory, setInventory] = useState<MaterialInventory[]>([]);
   const [sites, setSites] = useState<any[]>([]);
   const [selectedSite, setSelectedSite] = useState('');

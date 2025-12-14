@@ -1,4 +1,5 @@
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
+import type { ReactNode } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
@@ -14,8 +15,7 @@ import {
   Bell,
   Menu,
   X,
-  LogOut,
-  Settings
+  LogOut
 } from 'lucide-react';
 
 interface LayoutProps {
