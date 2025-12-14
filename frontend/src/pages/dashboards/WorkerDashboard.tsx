@@ -236,7 +236,9 @@ export const WorkerDashboard = () => {
                       <div>
                         <p className="text-sm opacity-90">Hours Worked</p>
                         <p className="text-lg font-semibold">
-                          {todayAttendance.hours_worked.toFixed(2)} hrs
+                          {typeof todayAttendance.hours_worked === 'number' 
+                            ? todayAttendance.hours_worked.toFixed(2) 
+                            : Number(todayAttendance.hours_worked || 0).toFixed(2)} hrs
                         </p>
                       </div>
                     )}

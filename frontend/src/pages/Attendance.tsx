@@ -152,7 +152,9 @@ export const Attendance = () => {
                     <div>
                       <p className="text-sm text-gray-600">Hours Worked</p>
                       <p className="text-lg font-semibold">
-                        {todayAttendance.hours_worked.toFixed(2)} hrs
+                        {typeof todayAttendance.hours_worked === 'number' 
+                          ? todayAttendance.hours_worked.toFixed(2) 
+                          : Number(todayAttendance.hours_worked || 0).toFixed(2)} hrs
                       </p>
                     </div>
                   )}
@@ -211,7 +213,11 @@ export const Attendance = () => {
                       {record.clock_out ? new Date(record.clock_out).toLocaleTimeString() : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {record.hours_worked ? record.hours_worked.toFixed(2) : '-'}
+                      {record.hours_worked 
+                        ? (typeof record.hours_worked === 'number' 
+                            ? record.hours_worked.toFixed(2) 
+                            : Number(record.hours_worked || 0).toFixed(2))
+                        : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
