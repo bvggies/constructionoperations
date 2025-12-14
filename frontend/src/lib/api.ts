@@ -31,10 +31,21 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle token expiration
+// Handle token expiration and log errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Log API errors for debugging
+    if (error.config) {
+      console.error('API Error:', {
+        url: error.config.url,
+        baseURL: error.config.baseURL,
+        method: error.config.method,
+        status: error.response?.status,
+        message: error.message
+      });
+    }
+    
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
@@ -43,6 +54,9 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Log API URL on initialization
+console.log('API Base URL:', API_URL);
 
 export default api;
 

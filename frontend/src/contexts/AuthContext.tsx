@@ -34,10 +34,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (username: string, password: string) => {
-    const res = await api.post('/auth/login', { username, password });
-    const { user, token } = res.data;
-    setAuth(user, token);
-    setUser(user);
+    try {
+      const res = await api.post('/auth/login', { username, password });
+      const { user, token } = res.data;
+      setAuth(user, token);
+      setUser(user);
+    } catch (error: any) {
+      console.error('Login error:', error);
+      if (error.response) {
+        // Server responded with error
+        throw new Error(error.response.data?.error || 'Login failed');
+      } else if (error.request) {
+        // Request made but no response
+        throw new Error('Unable to connect to server. Please check your API URL configuration.');
+      } else {
+        // Something else happened
+        throw new Error(error.message || 'Login failed');
+      }
+    }
   };
 
   const logout = () => {
