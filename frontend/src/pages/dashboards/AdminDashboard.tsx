@@ -9,13 +9,11 @@ import {
   Wrench,
   Users,
   TrendingUp,
-  AlertCircle,
   Clock,
-  FileText,
   Settings,
   BarChart3
 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 interface DashboardData {
   overview: {
@@ -231,12 +229,12 @@ export const AdminDashboard = () => {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ status, count }) => `${status}: ${count}`}
+                  label={(entry: any) => `${entry.status}: ${entry.count}`}
                   outerRadius={100}
                   fill="#8884d8"
                   dataKey="count"
                 >
-                  {equipmentStats.map((entry, index) => (
+                  {equipmentStats.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

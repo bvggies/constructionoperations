@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../lib/api';
 import { Layout } from '../components/Layout';
-import { Plus, Search, Edit, Trash2, MapPin, Calendar, User } from 'lucide-react';
+import { Plus, Edit, Trash2, MapPin, Calendar, User } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface Project {

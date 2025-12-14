@@ -9,8 +9,7 @@ import {
   Calendar,
   TrendingUp,
   AlertCircle,
-  CheckCircle,
-  XCircle
+  CheckCircle
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -66,7 +65,7 @@ export const WorkerDashboard = () => {
     try {
       const res = await api.get('/sites');
       // Filter sites where user is assigned
-      const assignedSites = res.data.filter((site: any) => {
+      const assignedSites = res.data.filter(() => {
         // This would need a proper API endpoint to check team membership
         return true; // Simplified for now
       });

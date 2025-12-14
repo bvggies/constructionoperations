@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../lib/api';
 import { Layout } from '../components/Layout';
-import { Plus, Edit, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { Plus, CheckCircle, Clock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface Task {

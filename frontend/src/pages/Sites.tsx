@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../lib/api';
 import { Layout } from '../components/Layout';
-import { Plus, Edit, Trash2, Users, MapPin, User } from 'lucide-react';
+import { Plus, Edit, Users, MapPin, User } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface Site {
