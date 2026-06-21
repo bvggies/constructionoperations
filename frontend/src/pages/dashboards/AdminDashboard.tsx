@@ -4,42 +4,28 @@ import api from '../../lib/api';
 import { Layout } from '../../components/Layout';
 import {
   FolderKanban,
-  CheckSquare,
-  Package,
-  Wrench,
   Users,
   TrendingUp,
   Clock,
   Settings,
-  BarChart3
+  MapPin
 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 interface DashboardData {
   overview: {
     activeProjects: number;
-    pendingTasks: number;
-    lowStockMaterials: number;
-    equipmentIssues: number;
-    presentToday: number;
     totalUsers: number;
     totalSites: number;
   };
   recentActivities: any[];
 }
 
-const COLORS = ['#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
-
 export const AdminDashboard = () => {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [taskStats, setTaskStats] = useState<any[]>([]);
-  const [equipmentStats, setEquipmentStats] = useState<any[]>([]);
 
   useEffect(() => {
     fetchDashboardData();
-    fetchTaskStats();
-    fetchEquipmentStats();
   }, []);
 
   const fetchDashboardData = async () => {
@@ -47,37 +33,19 @@ export const AdminDashboard = () => {
       const res = await api.get('/reports/dashboard');
       const usersRes = await api.get('/users');
       const sitesRes = await api.get('/sites');
-      
+
       setData({
-        ...res.data,
+        recentActivities: res.data.recentActivities,
         overview: {
-          ...res.data.overview,
+          activeProjects: res.data.overview.activeProjects,
           totalUsers: usersRes.data.length,
-          totalSites: sitesRes.data.length
-        }
+          totalSites: sitesRes.data.length,
+        },
       });
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchTaskStats = async () => {
-    try {
-      const res = await api.get('/reports/tasks/progress');
-      setTaskStats(res.data);
-    } catch (error) {
-      console.error('Failed to fetch task stats:', error);
-    }
-  };
-
-  const fetchEquipmentStats = async () => {
-    try {
-      const res = await api.get('/reports/equipment/status');
-      setEquipmentStats(res.data);
-    } catch (error) {
-      console.error('Failed to fetch equipment stats:', error);
     }
   };
 
@@ -98,7 +66,7 @@ export const AdminDashboard = () => {
       icon: FolderKanban,
       color: 'bg-blue-500',
       link: '/projects',
-      change: '+12%'
+      change: '+12%',
     },
     {
       name: 'Total Users',
@@ -106,48 +74,16 @@ export const AdminDashboard = () => {
       icon: Users,
       color: 'bg-purple-500',
       link: '/users',
-      change: '+5%'
+      change: '+5%',
     },
     {
       name: 'Total Sites',
       value: data?.overview.totalSites || 0,
-      icon: FolderKanban,
+      icon: MapPin,
       color: 'bg-green-500',
       link: '/sites',
-      change: '+8%'
+      change: '+8%',
     },
-    {
-      name: 'Pending Tasks',
-      value: data?.overview.pendingTasks || 0,
-      icon: CheckSquare,
-      color: 'bg-yellow-500',
-      link: '/tasks',
-      change: '-3%'
-    },
-    {
-      name: 'Low Stock Materials',
-      value: data?.overview.lowStockMaterials || 0,
-      icon: Package,
-      color: 'bg-red-500',
-      link: '/materials',
-      change: '+2'
-    },
-    {
-      name: 'Equipment Issues',
-      value: data?.overview.equipmentIssues || 0,
-      icon: Wrench,
-      color: 'bg-orange-500',
-      link: '/equipment',
-      change: '-1'
-    },
-    {
-      name: 'Present Today',
-      value: data?.overview.presentToday || 0,
-      icon: Clock,
-      color: 'bg-indigo-500',
-      link: '/attendance',
-      change: '+15%'
-    }
   ];
 
   return (
@@ -165,7 +101,7 @@ export const AdminDashboard = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {stats.map((stat) => {
             const Icon = stat.icon;
             return (
@@ -187,61 +123,6 @@ export const AdminDashboard = () => {
               </Link>
             );
           })}
-        </div>
-
-        {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Task Status Chart */}
-          <div className="card">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Task Status Overview</h2>
-              <BarChart3 className="text-primary-600" size={24} />
-            </div>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={taskStats.length > 0 ? taskStats : [
-                { status: 'Pending', count: 0 },
-                { status: 'In Progress', count: 0 },
-                { status: 'Completed', count: 0 }
-              ]}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="status" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="count" fill="#0ea5e9" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Equipment Status */}
-          <div className="card">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Equipment Status</h2>
-              <Wrench className="text-primary-600" size={24} />
-            </div>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={equipmentStats.length > 0 ? equipmentStats : [
-                    { status: 'Available', count: 0 },
-                    { status: 'In Use', count: 0 },
-                    { status: 'Maintenance', count: 0 }
-                  ]}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={(entry: any) => `${entry.status}: ${entry.count}`}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="count"
-                >
-                  {equipmentStats.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
         </div>
 
         {/* Quick Actions */}
@@ -303,4 +184,3 @@ export const AdminDashboard = () => {
     </Layout>
   );
 };
-
