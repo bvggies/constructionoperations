@@ -1,0 +1,14 @@
+flowchart TD
+    Admin["Admin\nFull system control"]
+    Manager["Manager\nProjects & approvals"]
+    Supervisor["Supervisor\nSite & team ops"]
+    Worker["Worker\nTasks & attendance"]
+
+    Admin --> Manager
+    Manager --> Supervisor
+    Supervisor --> Worker
+
+    Admin -.- A1["Users · All modules · Reports"]
+    Manager -.- M1["Projects · Materials approval · Reports"]
+    Supervisor -.- S1["Sites · Tasks · Team attendance"]
+    Worker -.- W1["Assigned tasks · Clock in/out"]

@@ -1,0 +1,5 @@
+flowchart LR
+    Cron["Vercel Cron\n0 */6 * * *"] -->|Bearer CRON_SECRET| EP["/api/equipment/alerts/cron"]
+    EP --> Check["checkMaintenanceAlerts()"]
+    Check --> Notify["In-app notifications\n(deduplicated)"]
+    Notify --> DB[("PostgreSQL")]

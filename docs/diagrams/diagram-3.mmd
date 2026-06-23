@@ -1,0 +1,20 @@
+flowchart LR
+    subgraph GitHub
+        Repo["constructionoperations\n(GitHub Repo)"]
+    end
+
+    subgraph Vercel
+        FE["Frontend\nStatic SPA"]
+        BE["Backend\nServerless API"]
+        Cron["Cron Job\nEvery 6 hours"]
+    end
+
+    subgraph Neon
+        DB[("PostgreSQL")]
+    end
+
+    Repo -->|push| FE
+    Repo -->|push| BE
+    Cron -->|GET /api/equipment/alerts/cron| BE
+    FE -->|VITE_API_URL| BE
+    BE -->|DATABASE_URL| DB

@@ -1,0 +1,12 @@
+{
+  "name": "opstracker-docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:pdf": "node scripts/generate-readme-pdf.mjs"
+  },
+  "devDependencies": {
+    "marked": "^15.0.6",
+    "puppeteer": "^24.2.0"
+  }
+}

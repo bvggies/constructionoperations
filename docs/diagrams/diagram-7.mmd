@@ -1,0 +1,6 @@
+flowchart LR
+    A["Register equipment"] --> B["Auto-generate QR code"]
+    B --> C["Print / display QR"]
+    C --> D["Scan with camera\n/equipment/scan/:code"]
+    D --> E["View equipment info"]
+    E --> F["Update status\n(mobile-friendly)"]

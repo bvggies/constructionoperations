@@ -1,0 +1,21 @@
+sequenceDiagram
+    participant U as User
+    participant F as React Frontend
+    participant A as Express API
+    participant M as Auth Middleware
+    participant D as PostgreSQL
+
+    U->>F: Login (username / password)
+    F->>A: POST /api/auth/login
+    A->>D: Verify credentials (bcrypt)
+    A-->>F: JWT + user profile
+    F->>F: Store token in localStorage
+
+    U->>F: Navigate to protected page
+    F->>A: GET /api/... (Authorization: Bearer JWT)
+    A->>M: Validate token
+    M-->>A: req.user { id, role }
+    A->>D: Parameterized SQL query
+    D-->>A: Result rows
+    A-->>F: JSON response
+    F-->>U: Render UI

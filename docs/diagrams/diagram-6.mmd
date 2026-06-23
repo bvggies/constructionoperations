@@ -1,0 +1,10 @@
+stateDiagram-v2
+    [*] --> available
+    available --> in_use: Start usage session
+    in_use --> available: End session (record hours)
+    available --> maintenance: Schedule preventive maint.
+    maintenance --> available: Complete maintenance
+    available --> broken: Report breakdown / incident
+    broken --> available: Mark repair fixed
+    available --> retired: Decommission
+    in_use --> broken: Fault during operation

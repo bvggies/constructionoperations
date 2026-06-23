@@ -1,0 +1,39 @@
+flowchart TB
+    subgraph Clients["Client Layer"]
+        Browser["Web Browser\n(Desktop / Mobile)"]
+        QR["QR Scanner\n(Mobile Camera)"]
+    end
+
+    subgraph Frontend["Frontend — Vite + React 19"]
+        SPA["Single Page App"]
+        AuthCtx["Auth Context\n(JWT in localStorage)"]
+        Pages["Pages & Dashboards"]
+        Charts["Recharts Analytics"]
+    end
+
+    subgraph Backend["Backend — Express 5 + TypeScript"]
+        API["REST API /api/*"]
+        AuthMW["JWT Auth Middleware"]
+        AuditMW["Audit Log Middleware"]
+        Alerts["Maintenance Alert Service"]
+        Uploads["Multer File Uploads"]
+    end
+
+    subgraph Data["Data Layer"]
+        PG[("Neon PostgreSQL")]
+        Files["Local /uploads\n(documents, equipment images)"]
+    end
+
+    Browser --> SPA
+    QR --> SPA
+    SPA --> AuthCtx --> Pages
+    Pages --> Charts
+    SPA -->|"HTTPS + Bearer Token"| API
+    API --> AuthMW --> AuditMW
+    API --> Alerts
+    API --> Uploads
+    AuthMW --> PG
+    AuditMW --> PG
+    Alerts --> PG
+    Uploads --> Files
+    API --> PG

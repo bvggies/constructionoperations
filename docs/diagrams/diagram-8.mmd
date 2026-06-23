@@ -1,0 +1,20 @@
+erDiagram
+    users ||--o{ projects : manages
+    users ||--o{ sites : supervises
+    users ||--o{ site_teams : "works on"
+    projects ||--o{ sites : contains
+    sites ||--o{ tasks : has
+    sites ||--o{ material_inventory : stocks
+    sites ||--o{ attendance : records
+    sites ||--o{ documents : stores
+    users ||--o{ tasks : "assigned to"
+    materials ||--o{ material_inventory : tracked_in
+    materials ||--o{ material_transactions : moved_via
+    equipment ||--o{ equipment_usage : used_in
+    equipment ||--o{ equipment_transfers : moved_via
+    equipment ||--o{ equipment_maintenance_records : serviced_by
+    equipment ||--o{ equipment_breakdowns : fails_as
+    equipment ||--o{ equipment_work_orders : repaired_via
+    spare_parts ||--o{ maintenance_spare_parts_usage : consumed_in
+    users ||--o{ notifications : receives
+    users ||--o{ audit_logs : generates
