@@ -305,10 +305,11 @@ async function seedDatabase() {
     const equipmentIds: number[] = [];
     for (const eq of equipment) {
       const result = await client.query(
-        `INSERT INTO equipment (name, type, model, serial_number, status)
-         VALUES ($1, $2, $3, $4, $5)
+        `INSERT INTO equipment (name, type, model, serial_number, status, equipment_code, qr_code, manufacturer, condition)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'good')
          RETURNING id`,
-        [eq.name, eq.type, eq.model, eq.serial_number, eq.status]
+        [eq.name, eq.type, eq.model, eq.serial_number, eq.status,
+         `EQ-${eq.serial_number}`, `qr_${eq.serial_number}`, eq.manufacturer || 'Generic']
       );
       equipmentIds.push(result.rows[0].id);
     }

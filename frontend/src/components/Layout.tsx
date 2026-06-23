@@ -55,7 +55,7 @@ export const Layout = ({ children }: LayoutProps) => {
     { icon: MapPin, label: 'Sites', path: '/sites', roles: ['admin', 'manager', 'supervisor', 'worker'] },
     { icon: CheckSquare, label: 'Tasks', path: '/tasks', roles: ['manager', 'supervisor', 'worker'] },
     { icon: Package, label: 'Materials', path: '/materials', roles: ['manager', 'supervisor', 'worker'] },
-    { icon: Wrench, label: 'Equipment', path: '/equipment', roles: ['manager', 'supervisor', 'worker'] },
+    { icon: Wrench, label: 'Equipment', path: '/equipment', roles: ['admin', 'manager', 'supervisor', 'worker'] },
     { icon: Clock, label: 'Attendance', path: '/attendance', roles: ['manager', 'supervisor', 'worker'] },
     { icon: FileText, label: 'Documents', path: '/documents', roles: ['manager', 'supervisor', 'worker'] },
     { icon: BarChart3, label: 'Reports', path: '/reports', roles: ['admin', 'manager', 'supervisor', 'worker'] },

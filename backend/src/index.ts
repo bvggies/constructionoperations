@@ -12,6 +12,9 @@ import siteRoutes from './routes/sites';
 import taskRoutes from './routes/tasks';
 import materialRoutes from './routes/materials';
 import equipmentRoutes from './routes/equipment';
+import sparePartsRoutes from './routes/spareParts';
+import workOrdersRoutes from './routes/workOrders';
+import { checkMaintenanceAlerts } from './services/maintenanceAlerts';
 import attendanceRoutes from './routes/attendance';
 import documentRoutes from './routes/documents';
 import notificationRoutes from './routes/notifications';
@@ -42,6 +45,8 @@ app.use('/api/sites', siteRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/materials', materialRoutes);
 app.use('/api/equipment', equipmentRoutes);
+app.use('/api/spare-parts', sparePartsRoutes);
+app.use('/api/work-orders', workOrdersRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/notifications', notificationRoutes);
@@ -65,6 +70,10 @@ async function startServer() {
   try {
     await initializeDatabase();
     console.log('Database initialized successfully');
+
+    // Run maintenance alerts on startup and every 6 hours
+    checkMaintenanceAlerts().catch(console.error);
+    setInterval(() => checkMaintenanceAlerts().catch(console.error), 6 * 60 * 60 * 1000);
 
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);

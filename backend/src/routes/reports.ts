@@ -208,5 +208,28 @@ router.get('/equipment/status', authenticate, async (req: AuthRequest, res: Resp
   }
 });
 
+// Equipment utilization report (for Reports page)
+router.get('/equipment/utilization', authenticate, async (_req: AuthRequest, res: Response) => {
+  try {
+    const result = await pool.query(`
+      SELECT e.id, e.equipment_code, e.name, e.type, e.status,
+        e.total_usage_hours, e.mileage,
+        COALESCE(SUM(eu.hours_used), 0) as period_hours,
+        COUNT(eu.id) as usage_sessions,
+        CASE WHEN e.status = 'available' AND e.updated_at < NOW() - INTERVAL '7 days'
+          THEN true ELSE false END as potentially_idle
+      FROM equipment e
+      LEFT JOIN equipment_usage eu ON eu.equipment_id = e.id
+        AND eu.start_date >= NOW() - INTERVAL '30 days'
+      WHERE e.status != 'retired'
+      GROUP BY e.id
+      ORDER BY period_hours DESC
+    `);
+    res.json(result.rows);
+  } catch (error: any) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 export default router;
 

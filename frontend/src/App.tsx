@@ -11,6 +11,7 @@ import { Sites } from './pages/Sites';
 import { Tasks } from './pages/Tasks';
 import { Materials } from './pages/Materials';
 import { Equipment } from './pages/Equipment';
+import { EquipmentScan } from './pages/EquipmentScan';
 import { Attendance } from './pages/Attendance';
 import { Documents } from './pages/Documents';
 import { Users } from './pages/Users';
@@ -114,6 +115,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Materials />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/equipment/scan/:code?"
+            element={
+              <ProtectedRoute>
+                <EquipmentScan />
               </ProtectedRoute>
             }
           />

@@ -1,4 +1,5 @@
 import pool from './database';
+import { migrateEquipmentSchema } from './equipmentSchema';
 
 export async function initializeDatabase() {
   const client = await pool.connect();
@@ -309,6 +310,8 @@ export async function initializeDatabase() {
     await client.query(`CREATE INDEX IF NOT EXISTS idx_audit_logs_user ON audit_logs(user_id, created_at)`);
 
     console.log('Database tables created successfully');
+
+    await migrateEquipmentSchema();
   } catch (error) {
     console.error('Error initializing database:', error);
     throw error;

@@ -24,6 +24,7 @@ export const Reports = () => {
   const [loading, setLoading] = useState(true);
   const [taskStats, setTaskStats] = useState<any[]>([]);
   const [equipmentStats, setEquipmentStats] = useState<any[]>([]);
+  const [equipmentUtilization, setEquipmentUtilization] = useState<any[]>([]);
   const [attendanceSummary, setAttendanceSummary] = useState<any[]>([]);
   const [dateRange, setDateRange] = useState({
     start_date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -38,9 +39,10 @@ export const Reports = () => {
   const fetchReports = async () => {
     try {
       setLoading(true);
-      const [tasksRes, equipmentRes, attendanceRes] = await Promise.all([
+      const [tasksRes, equipmentRes, utilizationRes, attendanceRes] = await Promise.all([
         api.get(`/reports/tasks/progress?start_date=${dateRange.start_date}&end_date=${dateRange.end_date}`).catch(() => ({ data: [] })),
         api.get('/reports/equipment/status').catch(() => ({ data: [] })),
+        api.get('/reports/equipment/utilization').catch(() => ({ data: [] })),
         user?.role === 'admin' || user?.role === 'manager' || user?.role === 'supervisor'
           ? api.get(`/reports/attendance/summary?start_date=${dateRange.start_date}&end_date=${dateRange.end_date}`).catch(() => ({ data: [] }))
           : Promise.resolve({ data: [] })
@@ -57,6 +59,7 @@ export const Reports = () => {
         status: item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : 'Unknown',
         count: parseInt(item.count) || 0
       })) : []);
+      setEquipmentUtilization(Array.isArray(utilizationRes.data) ? utilizationRes.data : []);
       setAttendanceSummary(Array.isArray(attendanceRes.data) ? attendanceRes.data : []);
     } catch (error) {
       console.error('Failed to fetch reports:', error);
@@ -228,6 +231,36 @@ export const Reports = () => {
             </div>
           )}
         </div>
+
+        {/* Equipment Utilization */}
+        {equipmentUtilization.length > 0 && (
+          <div className="card">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <BarChart3 className="text-blue-600" size={24} />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">Equipment Utilization</h2>
+                <p className="text-sm text-gray-600">30-day usage hours by equipment</p>
+              </div>
+            </div>
+            <ResponsiveContainer width="100%" height={350}>
+              <BarChart data={equipmentUtilization.slice(0, 12).map((u: any) => ({
+                name: u.equipment_code || u.name?.substring(0, 10),
+                hours: Number(u.period_hours),
+                total: Number(u.total_usage_hours),
+              }))}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="name" stroke="#6b7280" tick={{ fontSize: 11 }} />
+                <YAxis stroke="#6b7280" />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="hours" fill="#0ea5e9" name="30-Day Hours" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="total" fill="#8b5cf6" name="Total Hours" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </div>
     </Layout>
   );
